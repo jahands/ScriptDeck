@@ -31,7 +31,8 @@
     )
 
     begin {
-        $distroToolUrlRoot = 'https://developer.elgato.com/documentation/stream-deck/distributiontool'
+        # Distribution zips are mirrored from https://docs.elgato.com/sdk/plugins/packaging
+        $distroToolUrlRoot = 'https://pub-647250a4640f4ed4a60ee594b418f27d.r2.dev/streamdeck'
         if (-not $DistributionToolRoot) {
             
             $DistributionToolRoot = 
