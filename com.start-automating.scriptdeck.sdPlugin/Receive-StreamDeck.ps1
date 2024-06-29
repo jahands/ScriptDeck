@@ -220,14 +220,16 @@ $($MyInvocation.InvocationName) @params
                     }
                     New-Event -SourceIdentifier $sid -MessageData $streamDeckData
                     if ($streamDeckData.action) {
-                        $actionSid = "$($streamDeckData.action).$($streamDeckData.event)"
+                        # Remove com.start-automating.scriptdeck prefix
+                        $actionSidParts = "$($streamDeckData.action).$($streamDeckData.event)".Split('.')
+                        $actionSid = $actionSidParts[3..$($actionSidParts.Length)] -join '.'
                         if (-not $forwardedEvents[$actionSid]) {
                             $forwardedEvents[$sid] = Register-EngineEvent -SourceIdentifier $actionSid -Forward
                         }
 
                         $coordinates  = $streamDeckData.payload.coordinates
                         $ctx = "$($streamDeckData.device)@$($coordinates.Column),$($coordinates.Row)"
-                        New-Event -SourceIdentifier "$($streamDeckData.action).$($streamDeckData.event)" -MessageData $streamDeckData -Sender $Global:STREAMDECK_BUTTONS[$ctx]
+                        New-Event -SourceIdentifier $actionSid -MessageData $streamDeckData -Sender $Global:STREAMDECK_BUTTONS[$ctx]
                     }
                 )
                 if ($OutputType -eq 'Event') { $streamDeckEvent}

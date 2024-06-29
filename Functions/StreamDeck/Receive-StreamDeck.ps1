@@ -220,7 +220,9 @@ $($MyInvocation.InvocationName) @params
                     }
                     New-Event -SourceIdentifier $sid -MessageData $streamDeckData
                     if ($streamDeckData.action) {
-                        $actionSid = "$($streamDeckData.action).$($streamDeckData.event)"
+                        # Remove com.start-automating.scriptdeck prefix
+                        $actionSidParts = "$($streamDeckData.action).$($streamDeckData.event)".Split('.')
+                        $actionSid = $actionSidParts[3..$($actionSidParts.Length)] -join '.'
                         if (-not $forwardedEvents[$actionSid]) {
                             $forwardedEvents[$sid] = Register-EngineEvent -SourceIdentifier $actionSid -Forward
                         }

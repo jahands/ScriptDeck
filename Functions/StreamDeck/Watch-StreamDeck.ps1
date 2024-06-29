@@ -161,7 +161,10 @@ function Watch-StreamDeck
                                 '^\.$' -ne ''
                         ) +
                             $eventName
-                    ) -join '.'
+                ) -join '.'
+                if ($sourceIdentifier.StartsWith('.')) {
+                    $sourceIdentifier = $sourceIdentifier.SubString(1)
+                }
 
                 # Log what we're about to do.
                 Add-Content -Path $logPath -value "Registering Handler for '$sourceIdentifier': $($file.fullname)"
